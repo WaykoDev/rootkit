@@ -46,7 +46,7 @@ update_rootkit () {
 }
 
 create_rootkit () {
-    echo "Creating disk $DISK_FILE with size $DISK_SIZE"
+    echo "[*] Creating disk $DISK_FILE with size $DISK_SIZE"
 
     truncate -s $DISK_SIZE $DISK_FILE
     /sbin/parted -s $DISK_FILE mktable msdos
@@ -79,7 +79,7 @@ create_rootkit () {
 
     update_rootkit
 
-    echo "Disk created!"
+    echo "[*] Disk created!"
 }
 
 

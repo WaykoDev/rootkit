@@ -20,10 +20,24 @@ Verify if the kernel is compatible:
 6.8.0-47-generic
 ```
 
+If the version is compatible install dependencies:
+
+**Debian/Ubuntu:**
+```bash
+sudo apt update
+sudo apt install -y build-essential linux-headers-$(uname -r) qemu-system grub2 docker parted losetup
+```
+
+Clone the project:
+```bash
+git clone https://github.com/WaykoDev/rootkit.git && \
+cd rootkit
+```
+
 Download the latest stable release from The [Linux Kernel Archives](https://kernel.org/) :
 ```bash
 wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.11.tar.xz
-tar -xvf linux-6.11.tar.xz
+tar -xvf linux-6.11.5.tar.xz
 cd linux-6.11
 make defconfig
 make -j$(nproc) bzImage
