@@ -2,9 +2,9 @@
 
 print_help () {
     cat << EOF 
-usage: rootkit create | start | update
+usage: rootkit {create,start,update}
 
-Arguments:
+options:
     -d | --disk file : The target image
     -s | --size size : The size of the disk (only for create) (default 450M)
     -l | --linux path : The path to the linux kernel
