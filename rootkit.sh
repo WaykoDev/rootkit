@@ -12,7 +12,7 @@ options:
 EOF
 }   
 
-LINUX_PATH=./linux-6.11/arch/x86/boot/bzImage
+LINUX_PATH=./linux-6.11.5/arch/x86/boot/bzImage
 DISK_FILE="disk.img"
 DISK_SIZE="450M"
 
@@ -22,14 +22,14 @@ SETUP_FOLDER=./setup
 
 mount_rootkit () {
     sudo losetup -Pf $DISK_FILE
-    LOOP=$(losetup -l | grep $DISK_FILE | grep -o 'loop.')
+    LOOP=$(losetup -l | grep disk.img | cut -d '/' -f3 | cut -d ' ' -f1)
     sudo mkdir -p $TMP_FOLDER
     sudo mount /dev/${LOOP}p1 $TMP_FOLDER
 }
 
 umount_rootkit () {
-    LOOP=$(losetup -l | grep $DISK_FILE | grep -o 'loop.')
-    LOOP_COUNT=$(losetup -l | grep $DISK_FILE | grep -o 'loop.' | wc -l)
+    LOOP=$(losetup -l | grep disk.img | cut -d '/' -f3 | cut -d ' ' -f1)
+    LOOP_COUNT=$(losetup -l | grep disk.img | cut -d '/' -f3 | cut -d ' ' -f1 | wc -l)
     if [ $LOOP_COUNT -ne 1 ]; then
         echo "Error : Failed to detach the loop"
         exit
@@ -46,16 +46,17 @@ update_rootkit () {
 }
 
 create_rootkit () {
-    echo "[*] Creating disk $DISK_FILE with size $DISK_SIZE"
 
     truncate -s $DISK_SIZE $DISK_FILE
     /sbin/parted -s $DISK_FILE mktable msdos
     /sbin/parted -s $DISK_FILE mkpart primary ext4 1 "100%"
     /sbin/parted -s $DISK_FILE set 1 boot on
+    
     sudo losetup -Pf $DISK_FILE
+    echo "[*] Creating disk $DISK_FILE with size $DISK_SIZE"
 
-    LOOP=$(losetup -l | grep $DISK_FILE | grep -o 'loop.')
-    LOOP_COUNT=$(losetup -l | grep $DISK_FILE | grep -o 'loop.' | wc -l)
+    LOOP=$(losetup -l | grep disk.img | cut -d '/' -f3 | cut -d ' ' -f1)
+    LOOP_COUNT=$(losetup -l | grep disk.img | cut -d '/' -f3 | cut -d ' ' -f1 | wc -l)
     if [ $LOOP_COUNT -ne 1 ]; then
         echo "Error : Failed to attach the loop"
         exit
@@ -65,7 +66,7 @@ create_rootkit () {
     mkdir -p $TMP_FOLDER
     sudo mount /dev/${LOOP}p1 $TMP_FOLDER
 
-    sudo docker build ./setup -t rootkit-vm
+    sudo docker build ./setup -t rf
     sudo docker run --rm -v /tmp/my-rootfs:/my-rootfs rootkit-vm /init.sh
 
     sudo mkdir -p $TMP_FOLDER/boot/grub
