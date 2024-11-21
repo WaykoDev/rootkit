@@ -79,12 +79,9 @@ create_rootkit () {
     sudo losetup -d /dev/$LOOP
 
     update_rootkit
-    echo -e "\n"
 }
 
-
 start_rootkit () {
-    # umount_rootkit > /dev/null
     qemu-system-x86_64 -hda $DISK_FILE -nographic
     exit 0
 }
@@ -129,14 +126,16 @@ fi
 if [ $1 = "create" ]; then
     create_rootkit
     echo "[+] Disk created!"
-elif [ $1 = "start" ]; then
+elif [ $1 = "start" ] || [ $1 = "run" ]; then
     echo "[+] Rootkit launch!"
     start_rootkit
 elif [ $1 = "update" ]; then
-    echo "[+] Disk updated!"
     update_rootkit
+    echo "[+] Disk updated!"
 elif [ $1 = "mount" ]; then
     mount_rootkit
+    echo "[+] Disk successfully mount!"
 elif [ $1 = "umount" ]; then
     umount_rootkit
+    echo "[+] Disk successfully umount!"
 fi
