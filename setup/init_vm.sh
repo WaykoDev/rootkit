@@ -20,6 +20,7 @@ rc-update add sysfs boot
 
 rc-update add syslog boot
 rc-update add networking boot
+rc-update add rootkit default
 
 for d in bin etc lib root sbin usr; do tar c "/$d" | tar x -C /my-rootfs; done
 for dir in dev proc run sys var; do mkdir /my-rootfs/${dir}; done
