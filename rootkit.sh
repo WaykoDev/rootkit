@@ -2,7 +2,7 @@
 
 print_help () {
     cat << EOF 
-usage: rootkit {create,start,update}
+usage: rootkit {create,start,update,mount,umount}
 
 options:
     -d | --disk file : The target image
@@ -53,7 +53,7 @@ create_rootkit () {
     /sbin/parted -s $DISK_FILE set 1 boot on
     
     sudo losetup -Pf $DISK_FILE
-    echo "[*] Creating disk $DISK_FILE with size $DISK_SIZE"
+    echo -e "[+] Creating disk $DISK_FILE with size $DISK_SIZE\n"
 
     LOOP=$(losetup -l | grep disk.img | cut -d '/' -f3 | cut -d ' ' -f1)
     LOOP_COUNT=$(losetup -l | grep disk.img | cut -d '/' -f3 | cut -d ' ' -f1 | wc -l)
@@ -79,8 +79,7 @@ create_rootkit () {
     sudo losetup -d /dev/$LOOP
 
     update_rootkit
-
-    echo "[*] Disk created!"
+    echo -e "\n"
 }
 
 
@@ -129,9 +128,12 @@ fi
 
 if [ $1 = "create" ]; then
     create_rootkit
+    echo "[+] Disk created!"
 elif [ $1 = "start" ]; then
+    echo "[+] Rootkit launch!"
     start_rootkit
 elif [ $1 = "update" ]; then
+    echo "[+] Disk updated!"
     update_rootkit
 elif [ $1 = "mount" ]; then
     mount_rootkit
