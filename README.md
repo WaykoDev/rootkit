@@ -1,4 +1,4 @@
-# Glactus
+# Galactus
 
 ### Disclaimer ###
 
@@ -50,10 +50,9 @@ cd rootkit && \
 
 ### Usage ###
 
-Build and install the rootkit module:
+Build and copy the rootkit module to `/fs/lib/secret`:
 ```bash
 make
-make install
 ```
 
 Create a disk image:
