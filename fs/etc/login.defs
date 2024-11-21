@@ -1,0 +1,15 @@
+# Min/max values for automatic UID selection in useradd
+UID_MIN                   1000
+UID_MAX                   60000
+
+# Min/max values for automatic GID selection in groupadd
+GID_MIN                   1000
+GID_MAX                   60000
+
+# Password aging controls
+PASS_MAX_DAYS             99999
+PASS_MIN_DAYS             0
+PASS_WARN_AGE             7
+
+# Enable or disable mail spool by default
+CREATE_HOME               yes
