@@ -1,6 +1,4 @@
-linux-*
 todo*
 *.img
-fs/lib/modules/6.11.5/
 *.log
 *.tmp
