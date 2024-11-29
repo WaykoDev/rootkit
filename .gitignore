@@ -2,3 +2,5 @@ todo*
 *.img
 *.log
 *.tmp
+test/
+driver.ko
