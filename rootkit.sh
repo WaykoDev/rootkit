@@ -66,7 +66,7 @@ create_rootkit () {
     mkdir -p $TMP_FOLDER
     sudo mount /dev/${LOOP}p1 $TMP_FOLDER
 
-    sudo docker build ./setup -t rf
+    sudo docker build ./setup -t rootkit-vm
     sudo docker run --rm -v /tmp/my-rootfs:/my-rootfs rootkit-vm /init.sh
 
     sudo mkdir -p $TMP_FOLDER/boot/grub
