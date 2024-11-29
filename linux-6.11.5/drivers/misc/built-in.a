@@ -1,0 +1,27 @@
+!<thin>
+//                                              170       `
+mei/init.o/
+mei/hbm.o/
+mei/interrupt.o/
+mei/client.o/
+mei/main.o/
+mei/dma-ring.o/
+mei/bus.o/
+mei/bus-fixup.o/
+mei/debugfs.o/
+mei/mei-trace.o/
+mei/pci-me.o/
+mei/hw-me.o/
+
+/0              0           0     0     644     14136     `
+/12             0           0     0     644     23360     `
+/23             0           0     0     644     11344     `
+/40             0           0     0     644     46544     `
+/54             0           0     0     644     28464     `
+/66             0           0     0     644     5440      `
+/82             0           0     0     644     36888     `
+/93             0           0     0     644     11736     `
+/110            0           0     0     644     10056     `
+/125            0           0     0     644     20504     `
+/142            0           0     0     644     16344     `
+/156            0           0     0     644     55960     `

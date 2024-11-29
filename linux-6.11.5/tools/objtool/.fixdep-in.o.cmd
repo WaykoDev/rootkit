@@ -1,0 +1,1 @@
+cmd_/home/ubuntu/Desktop/rootkit/linux-6.11.5/tools/objtool/fixdep-in.o :=  ld -r -o /home/ubuntu/Desktop/rootkit/linux-6.11.5/tools/objtool/fixdep-in.o  /home/ubuntu/Desktop/rootkit/linux-6.11.5/tools/objtool/fixdep.o
