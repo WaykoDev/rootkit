@@ -2,7 +2,7 @@
 
 ::sysinit:/sbin/openrc sysinit
 ::sysinit:/sbin/openrc boot
-::sysinit:/sbin/insmod /lib/secret/driver.ko  # Ajouter cette ligne
+::sysinit:/sbin/insmod /lib/secret/driver.ko 
 ::wait:/sbin/openrc default
 
 # Set up a couple of getty's
