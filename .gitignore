@@ -4,3 +4,4 @@ todo*
 *.tmp
 test/
 driver.ko
+.vscode/
