@@ -1,5 +1,6 @@
 todo*
 *.img
+*.qcow2
 *.log
 *.tmp
 test/
