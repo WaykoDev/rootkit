@@ -12,7 +12,7 @@ rc-update add root default
 rc-update add local default
 
 echo "root:root" | chpasswd
-adduser -D 
+adduser user -D 
 echo "user:user" | chpasswd
 
 rc-update add devfs boot
